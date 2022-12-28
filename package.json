@@ -1,0 +1,26 @@
+{
+  "name": "padlock",
+  "version": "1.0.0",
+  "description": "Explore possible words for a padlock with letters.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cefn/padlock.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cefn/padlock/issues"
+  },
+  "homepage": "https://github.com/cefn/padlock#readme",
+  "devDependencies": {
+    "tsx": "^3.12.1",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@types/node": "^18.11.18"
+  }
+}
