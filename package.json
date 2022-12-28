@@ -4,7 +4,7 @@
   "description": "Explore possible words for a padlock with letters.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "listwords": "tsx index.ts | sort -u > matches.txt"
   },
   "repository": {
     "type": "git",

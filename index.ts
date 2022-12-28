@@ -1,8 +1,6 @@
 import fs from "fs";
 
-type StringList = Array<string>;
-
-const RING_LETTERS: StringList = [
+const RING_LETTERS = [
   "OFLRXAMHZD",
   "ODJPVEKRWB",
   "ODJPVEKRWB",
@@ -11,40 +9,41 @@ const RING_LETTERS: StringList = [
 ];
 
 export function* listPermutations<T>(
-  remaining: Array<T>,
-  sequence: Array<T> = []
+  available: Array<T>,
+  currentSequence: Array<T> = []
 ) {
-  if (remaining.length === 1) {
-    // end of branch return a list containing a single permutation list
-    yield [...sequence, ...remaining.values()];
+  if (available.length === 1) {
+    // only one permutation remains in this branch
+    yield [...currentSequence, ...available];
   } else {
-    // aggregate the permutations
-    yield* remaining.flatMap((chosenItem) => {
-      return listPermutations(
-        remaining.filter((item) => item !== chosenItem),
-        [...sequence, chosenItem]
-      );
-    });
+    // aggregate permutations for all descendant branches
+    for (const nextChoice of available) {
+      const nextSequence = [...currentSequence, nextChoice];
+      const stillAvailable = available.filter((item) => item !== nextChoice);
+      yield* listPermutations(stillAvailable, nextSequence);
+    }
   }
 }
 
 function printMatchingLines() {
-  // load the dictionary from file
+  // load dictionary lines
   const dictionaryLines = fs
     .readFileSync("/usr/share/dict/words")
     .toString()
     .split("\n");
 
-  // create a RegExp pattern for every ring combination
   for (const ringNumberPermutation of listPermutations([0, 1, 2, 3, 4])) {
+    // create RegExp for words matching each ring sequence, like...
+    // ^[OFLRXAMHZD][ODJPVEKRWB][OCIQYDJPUA][OCIQYDJPUA][ODJPVEKRWB]$
     let pattern = "^";
     for (const ringNumber of ringNumberPermutation) {
       const ringLetters = RING_LETTERS[ringNumber];
       pattern += `[${ringLetters}]`;
     }
     pattern += "$";
-
     const regexpPattern = new RegExp(pattern, "i");
+
+    // try the pattern against every line from the dictionary and print matches
     for (const dictionaryLine of dictionaryLines) {
       if (regexpPattern.test(dictionaryLine)) {
         console.log(`${dictionaryLine} from ${pattern}`);
